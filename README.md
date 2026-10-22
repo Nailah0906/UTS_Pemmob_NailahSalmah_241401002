@@ -6,3 +6,4 @@ Lab     : 3
 
 ----------:3----------
 APLIKASI NaiQ (Nailah Quiz)
+font sumber : https://fonts.google.com/specimen/Comic+Relief?query=Comic+Relief+

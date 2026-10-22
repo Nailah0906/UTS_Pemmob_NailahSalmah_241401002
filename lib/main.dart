@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'screens/home_screen.dart'; 
 
 void main() {
   runApp(const MyApp());
@@ -12,11 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'NaiQ',
       debugShowCheckedModeBanner: false,
-      home: const Scaffold(
-        body: Center(
-          child: Text('Aplikasi NaiQ'),
-        ),
-      ),
+      home: const HomeScreen(), 
     );
   }
 }
