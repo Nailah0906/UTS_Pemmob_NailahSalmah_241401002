@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../themes/app_theme.dart';
+import 'quiz_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -173,7 +174,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 55,
                           child: ElevatedButton(
                             onPressed: () {
-                              // Navigasi nyusul
+                                if (_nameController.text.trim().isNotEmpty) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => QuizScreen(playerName: _nameController.text),
+                                    ),
+                                  );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Nama gak boleh kosong dong!')),
+                                );
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppTheme.biruPastel,
