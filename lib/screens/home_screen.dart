@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; 
+import '../providers/quiz_provider.dart'; 
 import '../themes/app_theme.dart';
 import 'quiz_screen.dart';
 
@@ -58,28 +60,29 @@ class _HomeScreenState extends State<HomeScreen> {
             right: 0,
             child: IgnorePointer( 
               child: SizedBox(
-                width: size.width * 0.85, 
-                height: size.width * 0.75, 
+                //make ukuran fix biar di web nyesuaikan
+                width: 400, 
+                height: 350, 
                 child: Stack(
                   alignment: Alignment.bottomRight,
                   children: [
   
                     Positioned(
-                      right: -30, 
+                      right: -20, 
                       bottom: 0, 
                       child: Image.asset(
                         'assets/images/liku1.png',
-                        width: size.width * 0.85, 
+                        width: 400, 
                       ),
                     ),
 
 
                     Positioned(
-                      right: size.width * 0.05,
+                      right: 30, 
                       bottom: 10, 
                       child: Image.asset(
                         'assets/images/hachi1.png',
-                        width: size.width * 0.35, 
+                        width: 160, 
                       ),
                     ),
                   ],
@@ -91,123 +94,133 @@ class _HomeScreenState extends State<HomeScreen> {
           SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.2),
-                          blurRadius: 15,
-                          offset: const Offset(0, 8),
-                        )
-                      ],
-                    ),
-                    child: Image.asset(
-                      'assets/images/logoNaiQ.png',
-                      width: 160,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  const Text(
-                    'Siap Kuis?',
-                    style: TextStyle(
-                      fontSize: 40,
-                      fontFamily: 'ComicRelief',
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      shadows: [
-                        Shadow(
-                          offset: Offset(3 , 3 ),
-                          blurRadius: 7,
-                          color: Color.fromARGB(137, 53, 52, 52),
+              child: Center(
+                child: ConstrainedBox( 
+                  constraints: const BoxConstraints(maxWidth: 450), // Biar kotak input ga melar
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.2),
+                              blurRadius: 15,
+                              offset: const Offset(0, 8),
+                            )
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 40),
+                        child: Image.asset(
+                          'assets/images/logoNaiQ.png',
+                          width: 160,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
 
-                  // button nama dan mulai
-                  Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.5),
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(color: Colors.white, width: 2),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
-                        )
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        // Input Nama
-                        TextField(
-                          controller: _nameController,
-                          style: const TextStyle(fontFamily: 'ComicRelief', fontSize: 16),
-                          decoration: InputDecoration(
-                            hintText: 'Masukkan Nama',
-                            hintStyle: TextStyle(color: AppTheme.abu.withValues(alpha: 0.5)),
-                            filled: true,
-                            fillColor: Colors.white,
-                            prefixIcon: const Icon(Icons.person_outline, color: AppTheme.biruPastel),
-                            contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide.none,
+                      const Text(
+                        'Siap Kuis?',
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontFamily: 'ComicRelief',
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          shadows: [
+                            Shadow(
+                              offset: Offset(3 , 3 ),
+                              blurRadius: 7,
+                              color: Color.fromARGB(137, 53, 52, 52),
                             ),
-                          ),
+                          ],
                         ),
-                        const SizedBox(height: 20),
+                      ),
+                      const SizedBox(height: 40),
 
-                        // Start Button
-                        SizedBox(
-                          width: double.infinity,
-                          height: 55,
-                          child: ElevatedButton(
-                            onPressed: () {
-                                if (_nameController.text.trim().isNotEmpty) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => QuizScreen(playerName: _nameController.text),
-                                    ),
-                                  );
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Nama gak boleh kosong dong!')),
-                                );
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppTheme.biruPastel,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
+                      // button nama dan mulai
+                      Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.5),
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(color: Colors.white, width: 2),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.1),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            )
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            // Input Nama
+                            TextField(
+                              controller: _nameController,
+                              style: const TextStyle(fontFamily: 'ComicRelief', fontSize: 16),
+                              decoration: InputDecoration(
+                                hintText: 'Masukkan Nama',
+                                hintStyle: TextStyle(color: AppTheme.abu.withValues(alpha: 0.5)),
+                                filled: true,
+                                fillColor: Colors.white,
+                                prefixIcon: const Icon(Icons.person_outline, color: AppTheme.biruPastel),
+                                contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide.none,
+                                ),
                               ),
-                              elevation: 0,
                             ),
-                            child: const Text(
-                              'MULAI',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  
+                            const SizedBox(height: 20),
 
-                  SizedBox(height: size.width * 0.2),
-                ],
+                            // Start Button
+                            SizedBox(
+                              width: double.infinity,
+                              height: 55,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                    if (_nameController.text.trim().isNotEmpty) {
+                                      //biar tiap mulai soalnya ke reset
+                                      final quizProvider = Provider.of<QuizProvider>(context, listen: false);
+                                      quizProvider.resetQuiz();
+
+
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => QuizScreen(playerName: _nameController.text),
+                                        ),
+                                      );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('Nama gak boleh kosong yah!')),
+                                    );
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppTheme.biruPastel,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  elevation: 0,
+                                ),
+                                child: const Text(
+                                  'MULAI',
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      
+                      // Spasi bawah dibikin fix 
+                      const SizedBox(height: 250),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),

@@ -8,7 +8,7 @@ final List<Question> dummyQuestions = [
   ),
   Question(
     questionText: ' Hewan apa yang paling boros di dunia?',
-    options: ['Kucing belanja', 'Beruan', 'Ayam keliling', 'Bebek mall'],
+    options: ['Kucing belanja', 'Beruang', 'Ayam keliling', 'Bebek mall'],
     correctAnswerIndex: 1,
   ),
   Question(
