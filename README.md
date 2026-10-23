@@ -33,4 +33,6 @@ Result Screen = https://drive.google.com/file/d/1Cr8WJ5Z9qPNMqz2CiPYP20OQQLgv1he
 - ga ada
 
 ### Link Video Presentasi
-* **Google Drive:** https://drive.google.com/drive/folders/1v9kGttdV4Q3RpQprjqeOlvznZdwQgA6J?usp=drive_link
+* **Google Drive:** https://drive.google.com/file/d/1RNNWXPPSvFiUupa0-5CWEc8gqibKaBIm/view?usp=drive_link
+*
+*link keseluruhan media:  https://drive.google.com/drive/folders/1v9kGttdV4Q3RpQprjqeOlvznZdwQgA6J?usp=drive_link
