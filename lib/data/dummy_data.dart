@@ -42,13 +42,13 @@ final List<Question> dummyQuestions = [
     correctAnswerIndex: 0,
   ),
   Question(
-    questionText: 'Ada Apa di Ujung Langit?',
+    questionText: 'Apakah yang ada di Ujung Langit?',
     options: ['Angkasa', 'Awan', 'T', 'Planet'],
     correctAnswerIndex: 2,
   ),
   Question(
     questionText: 'Apa yang Bisa Terbang Tanpa Sayap',
     options: ['Pesawat', 'Burung', 'Kupu-kupu', 'Jam'],
-    correctAnswerIndex: 3,
+    correctAnswerIndex: 1,
   ),
 ];

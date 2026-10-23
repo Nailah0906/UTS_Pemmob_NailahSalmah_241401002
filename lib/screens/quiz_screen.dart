@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; 
 import '../themes/app_theme.dart';
-import '../data/dummy_data.dart';
-import '../models/question_model.dart'; 
-
+import '../providers/quiz_provider.dart'; 
+import '../widgets/option_card.dart'; 
 
 class QuizScreen extends StatefulWidget {
   final String playerName;
@@ -13,21 +13,16 @@ class QuizScreen extends StatefulWidget {
 }
 
 class _QuizScreenState extends State<QuizScreen> {
-  // Data dummy 
-  int _currentQuestionIndex = 0;
-  int? _selectedOptionIndex;
-
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    
-    // Ambil soal dari data dummy
-    final Question currentQuestion = dummyQuestions[_currentQuestionIndex];
+    //data dri provider
+    final quizProvider = Provider.of<QuizProvider>(context);
+    final currentQuestion = quizProvider.currentQuestion;
 
     return Scaffold(
       body: Stack(
         children: [
-          // 1. bg kotak
+          // bg kotak
           Container(
             width: double.infinity,
             height: double.infinity,
@@ -39,7 +34,7 @@ class _QuizScreenState extends State<QuizScreen> {
             ),
           ),
 
-          // 2. gradien bg 
+          // gradien bg 
           Positioned(
             top: 0,
             left: 0,
@@ -65,189 +60,154 @@ class _QuizScreenState extends State<QuizScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // header nama dan progress bar
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Pemain: ${widget.playerName}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold, 
-                          color: AppTheme.abu,
-                          fontFamily: 'ComicRelief', 
-                        ),
-                      ),
-                      Text(
-                        'Soal ${_currentQuestionIndex + 1}/${dummyQuestions.length}', // Dinamis
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold, 
-                          color: AppTheme.abu,
-                          fontFamily: 'ComicRelief', 
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  
-                  // Progress Bar
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: LinearProgressIndicator(
-                      value: (_currentQuestionIndex + 1) / dummyQuestions.length, // Dinamis
-                      backgroundColor: Colors.white.withValues(alpha: 0.5),
-                      color: const Color.fromARGB(255, 125, 218, 255),
-                      minHeight: 12,
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-
-                  //soal 
-                  Stack(
-                    clipBehavior: Clip.none, 
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.only(top: 35, bottom: 24, left: 24, right: 24), 
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(24),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.1),
-                              blurRadius: 15,
-                              offset: const Offset(0, 8),
-                            )
-                          ],
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              currentQuestion.questionText, // Ambil dari model
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 20, 
-                                fontWeight: FontWeight.bold, 
-                                color: AppTheme.abu,
-                                fontFamily: 'ComicRelief',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // kuping kiri
-                      Positioned(
-                        top: -15, 
-                        left: 30,
-                        child: Transform.rotate(
-                          angle: -0.8, 
-                          child: Container(
-                            width: 35,
-                            height: 35,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(15),
-                                topRight: Radius.circular(15),
-                                bottomLeft: Radius.circular(5),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      // kuping kanan
-                      Positioned(
-                        top: -15,
-                        right: 30,
-                        child: Transform.rotate(
-                          angle: 0.8, 
-                          child: Container(
-                            width: 35,
-                            height: 35,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(15),
-                                topRight: Radius.circular(15),
-                                bottomRight: Radius.circular(5),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-
-                  //jawaban
-                  ...List.generate(currentQuestion.options.length, (index) {
-                    bool isSelected = _selectedOptionIndex == index;
-                    
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedOptionIndex = index;
-                        });
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 12),
-                        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-                        decoration: BoxDecoration(
-                          color: isSelected ? AppTheme.biruPastel.withValues(alpha: 0.2) : Colors.white,
-                          border: Border.all(
-                            color: isSelected ? AppTheme.biruPastel : Colors.transparent,
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            if (!isSelected)
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.05),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              )
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                currentQuestion.options[index], // Ambil opsi dari model
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  // --- BAGIAN YANG BISA DI-SCROLL ---
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          // header nama dan progress bar
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Pemain: ${widget.playerName}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold, 
                                   color: AppTheme.abu,
                                   fontFamily: 'ComicRelief', 
                                 ),
                               ),
+                              Text(
+                                'Soal ${quizProvider.currentQuestionIndex + 1}/${quizProvider.totalQuestions}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold, 
+                                  color: AppTheme.abu,
+                                  fontFamily: 'ComicRelief', 
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          
+                          // Progress Bar
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: LinearProgressIndicator(
+                              value: (quizProvider.currentQuestionIndex + 1) / quizProvider.totalQuestions,
+                              backgroundColor: Colors.white.withValues(alpha: 0.5),
+                              color: const Color.fromARGB(255, 125, 218, 255),
+                              minHeight: 12,
                             ),
-                            Image.asset(
-                              'assets/images/ikan.png',
-                              width: 35, 
-                            ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(height: 30),
+
+                          //soal 
+                          Stack(
+                            clipBehavior: Clip.none, 
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.only(top: 35, bottom: 24, left: 24, right: 24), 
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(24),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(alpha: 0.1),
+                                      blurRadius: 15,
+                                      offset: const Offset(0, 8),
+                                    )
+                                  ],
+                                ),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      currentQuestion.questionText,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontSize: 20, 
+                                        fontWeight: FontWeight.bold, 
+                                        color: AppTheme.abu,
+                                        fontFamily: 'ComicRelief',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              // kuping kiri
+                              Positioned(
+                                top: -15, 
+                                left: 30,
+                                child: Transform.rotate(
+                                  angle: -0.8, 
+                                  child: Container(
+                                    width: 35,
+                                    height: 35,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(15),
+                                        topRight: Radius.circular(15),
+                                        bottomLeft: Radius.circular(5),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              // kuping kanan
+                              Positioned(
+                                top: -15,
+                                right: 30,
+                                child: Transform.rotate(
+                                  angle: 0.8, 
+                                  child: Container(
+                                    width: 35,
+                                    height: 35,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(15),
+                                        topRight: Radius.circular(15),
+                                        bottomRight: Radius.circular(5),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 30),
+
+                          //jawaban 
+                          ...List.generate(currentQuestion.options.length, (index) {
+                            return OptionCard(
+                              text: currentQuestion.options[index],
+                              isSelected: quizProvider.selectedOptionIndex == index,
+                              onTap: () {
+                                quizProvider.answerQuestion(index); 
+                              },
+                            );
+                          }),
+                          
+                          // Spasi tambahan biar jawaban paling bawah gak ketutup tombol
+                          const SizedBox(height: 20),
+                        ],
                       ),
-                    );
-                  }),
+                    ),
+                  ),
 
-                  const Spacer(),
-
-                  //prev dan next button
+                  // --- TOMBOL PREV & NEXT (DI LUAR SCROLL) ---
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       // previous button
-                      if (_currentQuestionIndex > 0)
+                      if (quizProvider.currentQuestionIndex > 0) 
                         SizedBox(
                           width: 60,
                           height: 60,
                           child: ElevatedButton(
                             onPressed: () {
-                              setState(() {
-                                _currentQuestionIndex--;
-                                _selectedOptionIndex = null; 
-                              });
+                              quizProvider.previousQuestion(); 
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
@@ -271,7 +231,15 @@ class _QuizScreenState extends State<QuizScreen> {
                             height: 60,
                             child: ElevatedButton(
                               onPressed: () {
-                                // Navigasi nyusul
+                                // Logika Next
+                                if (quizProvider.isLastQuestion) {
+                                  // Nanti navigasi ke ResultScreen
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Ini soal terakhir!')),
+                                  );
+                                } else {
+                                  quizProvider.nextQuestion();
+                                }
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppTheme.biruPastel,
@@ -286,10 +254,12 @@ class _QuizScreenState extends State<QuizScreen> {
                           Positioned(
                             top: -40, 
                             left: -50,
-                            child: Image.asset(
-                              'assets/images/hachi2.png',
-                              width: 100,
-                            ),
+                            child: IgnorePointer(
+                              child: Image.asset(
+                                'assets/images/hachi2.png',
+                                width: 100,
+                              ),
+                            ) //biar si hachi nya ga kepencet
                           ),
                         ],
                       ),
