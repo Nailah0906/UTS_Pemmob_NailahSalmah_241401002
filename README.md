@@ -24,7 +24,9 @@
 
 ### Screenshot Aplikasi
 Home Screen   = https://drive.google.com/file/d/1KG50clv1qigyeGkXCuCU2YpABVeIY7Gs/view?usp=sharing
+
 Quiz Screen   = https://drive.google.com/file/d/1EJyakTZBUCDlA1ijuFLISqA2dmNTVWSd/view?usp=drive_link
+
 Result Screen = https://drive.google.com/file/d/1Cr8WJ5Z9qPNMqz2CiPYP20OQQLgv1her/view?usp=drive_link
 
 ### Link Mockup
